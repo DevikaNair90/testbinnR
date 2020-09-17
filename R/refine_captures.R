@@ -10,7 +10,9 @@ refine_captures <- function(word_vec, types = c("xml", "financial", "dates", "ph
     xml = check_xmlhtml(Word, mode = "TF"),
     fin = check_financial(Word, mode = "TF"),
     dates = check_dates(Word),
-    pharma = check_pharma(Word, mode = "TF")
+    pharma = check_pharma(Word, mode = "TF"),
+    comp_name = check_company_name(Word, mode = "TF", case = "low"), 
+    tick = check_ticker(Word, mode = "TF")
     )
 
 }

@@ -18,10 +18,18 @@ check_financial <- function(word_vec, mode) {
   fin <- readRDS("data/financial_terms.RDS")
 
   if(mode == "TF") {
-    fin_TF <- isTRUE(word_vec %in% fin|word_vec %in% paste0(fin, "s"))
+    fin_TF <- word_vec %in% c(fin, paste0(fin, "s"))
   }
+  
 
   fin_TF
 
 }
 
+# allnonengsamp2 %>% mutate(checkfin = testbinnR::check_financial(low, "TF")) %>% filter(stringr::str_detect(low, "pay"))
+# 
+# allnonengsamp2 %>% mutate(checkfin = testbinnR::check_financial(low, "TF")) %>% filter(stringr::str_detect(low, "pay"))
+# 
+# data.frame(Word = unique(allnonengsamp2$low), CHeck = testbinnR::check_financial(unique(allnonengsamp2$low), "TF"))
+# 
+# testbinnR::check_financial("chargebacks", "TF")
