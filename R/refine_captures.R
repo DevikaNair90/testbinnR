@@ -2,7 +2,7 @@
 refine_captures <- function(word_vec, types = c("xml", "financial", "dates", "pharma")) {
   if(any(stringr::str_detect(word_vec, "[:upper:]"))) {
     word_vec <- stringr::str_to_lower(word_vec)
-  }
+  } 
 
   data.frame(Word = word_vec) %>%
     mutate(brand = check_brand(Word),
