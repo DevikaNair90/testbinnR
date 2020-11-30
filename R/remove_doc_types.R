@@ -1,0 +1,38 @@
+# Hello, world!
+#
+# This is an example function named 'hello'
+# which prints 'Hello, world!'.
+#
+# You can learn more about package authoring with RStudio at:
+#
+#   http://r-pkgs.had.co.nz/
+#
+# Some useful keyboard shortcuts for package authoring:
+#
+#   Build and Reload Package:  'Ctrl + Shift + B'
+#   Check Package:             'Ctrl + Shift + E'
+#   Test Package:              'Ctrl + Shift + T'
+
+remove_doc_types <- function(xml_string, types = c("GRAPHIC", "EXCEL", "ZIP", "EX-10.3", "EX-10.6", "EX-10.20")) {
+  no_ns <- gsub("\\n", " ", xml_string)
+  #browser()
+  for (t in types) {
+    find_str <- paste0("<DOCUMENT> ?<TYPE> ?", t)
+    search_str <- paste0("<DOCUMENT> ?<TYPE> ?", t, ".*?</DOCUMENT>")
+    found <-
+      data.table::as.data.table(stringr::str_locate_all(no_ns, find_str))
+    
+    if(nrow(found) > 0 ){
+      for (i in 1:nrow(found)) {
+        locs <- data.table::as.data.table(stringr::str_locate(no_ns, search_str))
+        st <- locs[1, start] - 1
+        en <- locs[1, end] + 1
+        ifelse(is.na(locs$start) == TRUE & is.na(locs$end) == TRUE, no_ns,
+               no_ns <- paste0(substr(no_ns, 1, st), substr(no_ns, en, nchar(no_ns))) )
+      }
+    }
+
+    
+  }
+  no_ns
+}
