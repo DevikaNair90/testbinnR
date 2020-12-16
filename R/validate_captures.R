@@ -22,4 +22,6 @@ validate_captures <- function(df) {
   
   res <- df %>% left_join(res, by = c("Word" = "Words")) %>% mutate(VALID = (Valid_PROP + Valid_NONPROP) > 0)
   
+  res
+  
 }

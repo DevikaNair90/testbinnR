@@ -19,6 +19,7 @@ ndc_product_ <- ndc_product %>%
   select(orig_id, family, colnames(ndc_product)) 
 
 # saveRDS(ndc_product_, "data/ndc_orig_listings.RDS")
+# ndc_product_ <- readRDS("data/ndc_orig_listings.RDS")
 
 ## clean strings of product names, add in corporate families, and rownames
 
@@ -42,20 +43,20 @@ ndc_validateset <- ndc_product_ %>%
          Nonprop_low = str_trim(str_replace_all(str_remove_all(str_to_lower(NONPROPRIETARYNAME), "\\(|\\)"), "\\\u0097|\\\u0093", " ")), 
          Sub_low = str_trim(str_replace_all(str_remove_all(str_to_lower(SUBSTANCENAME), "\\(|\\)"), "\\\u0097|\\\u0093", " ")),
          id = rownames(.)) %>%
-  select(orig_ID, id, family, LABELERNAME, PROPRIETARYNAME, NONPROPRIETARYNAME, SUBSTANCENAME, Prop_low, Nonprop_low, Sub_low, year, data)
+  select(orig_ID, id, family, LABELERNAME, PROPRIETARYNAME, NONPROPRIETARYNAME, SUBSTANCENAME, Prop_low, Nonprop_low, Sub_low, year, data) %>%
+  mutate(total_listings =  unlist(lapply(orig_ID, FUN = nrow)))
 
 # saveRDS(ndc_validateset, "data/ndc_validateset2.RDS")
 
 
-prop_low_ids <- ndc_validateset %>% select(orig_ID, id, Prop_low) %>% mutate(total_listings = unlist(lapply(orig_ID, FUN = nrow))) %>% select(id, Prop_low, total_listings, orig_ID)
-prop_low_unq <- prop_low_ids %>% count(Prop_low) %>% select(-n)
+prop_low_ids <- ndc_validateset %>% select(orig_ID, id, Prop_low) 
+prop_low_unq <- prop_low_ids %>% tidyr::nest(id = c("id"), orig_ID = c("orig_ID")) %>% mutate(pos_id = as.numeric(rownames(.)))
 # saveRDS(prop_low_ids, "data/ndc_validateset_proplowids.RDS")
 # saveRDS(prop_low_unq, "data/ndc_validateset_proplownames.RDS")
-nonprop_low_ids <- ndc_validateset %>% select(orig_ID, id, Nonprop_low) %>% mutate(total_listings = unlist(lapply(orig_ID, FUN = nrow))) %>% select(id, Nonprop_low, total_listings, orig_ID)
-nonprop_low_unq <- nonprop_low_ids %>% count(Nonprop_low) %>% select(-n)
+nonprop_low_ids <- ndc_validateset %>% select(orig_ID, id, Nonprop_low) 
+nonprop_low_unq <- nonprop_low_ids  %>% tidyr::nest(id = c("id"), orig_ID = c("orig_ID")) %>% mutate(pos_id = as.numeric(rownames(.)))
 # saveRDS(nonprop_low_ids, "data/ndc_validateset_nonproplowids.RDS")
 # saveRDS(nonprop_low_unq, "data/ndc_validateset_nonproplownames.RDS")
-
 
 # 
 # 

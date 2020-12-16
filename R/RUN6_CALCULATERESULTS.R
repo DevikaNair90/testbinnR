@@ -152,9 +152,10 @@ PERCVAL_METHOD <- PERCVAL_COMPANY %>%
 datalist_valid_mentions_all <- do.call("rbind", datalist_valid_mentions) 
 
 test_set_words <- datalist_valid_mentions_all  %>% filter(VALID == TRUE) %>% head(20) %>% select(family, Company, Month, Year, Captures, Word, Index_PROP, Index_NONPROP)
+datalist_valid[[1]]
 
 prop_test_set <- test_set_words %>% tidyr::unnest(Index_PROP) %>% select(-Index_NONPROP)
-nonprop_test_set <- test_set_words %>% tidyr::unnest(Index_NONPROP) %>% select(-Index_PROP)
+was  <- test_set_words %>% tidyr::unnest(Index_NONPROP) %>% select(-Index_PROP)
 
 prop_test_set  %>% left_join(ndc_val_set %>% mutate(id = as.integer(id)), by = c("Index_PROP" = "id")) %>% View()
 
@@ -166,7 +167,7 @@ ndc_product <-  readr::read_tsv(paste0(datapath1, "original/NDC/product.txt")) %
 
 ndc_product %>% head()
 
-
+CORPFAM_LAB <- ndc_sec_ref %>% transmute(family, ndc_labeler) %>% distinct()
 
 
 
